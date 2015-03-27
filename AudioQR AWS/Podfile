@@ -1,0 +1,9 @@
+platform :ios, '8.0'
+
+pod "AWSiOSSDKv2"
+pod "AWSCognitoSync"
+
+target :GHUnit do
+  pod 'GHUnitIOS'
+  pod 'OCMock'
+end
