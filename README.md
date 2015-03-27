@@ -12,7 +12,7 @@ TODO:
 
 - Share the QR code directly to any social networks.
 - Limit audio recording to 30-60s per clip.
-- Cancel recording while recording.
+- Swip up to cancel the recording when needed.
 - User system to manage your QR code and recording.
 
 ![](http://i.v2ex.co/SW6ZAQ35l.jpeg)
