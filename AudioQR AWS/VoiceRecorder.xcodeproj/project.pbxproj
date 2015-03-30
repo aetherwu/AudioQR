@@ -20,6 +20,7 @@
 		9233AC691AA23F47006EE1E4 /* split.c in Sources */ = {isa = PBXBuildFile; fileRef = 9233AC5F1AA23F47006EE1E4 /* split.c */; };
 		9233AC6A1AA23F47006EE1E4 /* UIImage+MDQRCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9233AC621AA23F47006EE1E4 /* UIImage+MDQRCode.m */; };
 		92377F871AC8DCBD005E63DB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92377F861AC8DCBD005E63DB /* Images.xcassets */; };
+		92377F8A1AC9F146005E63DB /* Timer.m in Sources */ = {isa = PBXBuildFile; fileRef = 92377F891AC9F146005E63DB /* Timer.m */; };
 		DD4ACEC717D03186009D48A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD58FF0917CEE747006C5079 /* UIKit.framework */; };
 		DD4ACEC817D03186009D48A8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD58FF0B17CEE747006C5079 /* Foundation.framework */; };
 		DD4ACEC917D03186009D48A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD58FF0D17CEE747006C5079 /* CoreGraphics.framework */; };
@@ -87,6 +88,8 @@
 		9233AC611AA23F47006EE1E4 /* UIImage+MDQRCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MDQRCode.h"; sourceTree = "<group>"; };
 		9233AC621AA23F47006EE1E4 /* UIImage+MDQRCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MDQRCode.m"; sourceTree = "<group>"; };
 		92377F861AC8DCBD005E63DB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		92377F881AC9F12B005E63DB /* Timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
+		92377F891AC9F146005E63DB /* Timer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Timer.m; sourceTree = "<group>"; };
 		B0F730C060D3FBCB90364270 /* Pods-GHUnit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GHUnit.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GHUnit/Pods-GHUnit.debug.xcconfig"; sourceTree = "<group>"; };
 		D805B75778DD180B74E3B03A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD4ACEC617D03186009D48A8 /* GHUnit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GHUnit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -282,6 +285,8 @@
 				DD58FF2417CEE747006C5079 /* ViewController.xib */,
 				92377F861AC8DCBD005E63DB /* Images.xcassets */,
 				DD58FF1017CEE747006C5079 /* Supporting Files */,
+				92377F881AC9F12B005E63DB /* Timer.h */,
+				92377F891AC9F146005E63DB /* Timer.m */,
 			);
 			path = VoiceRecorder;
 			sourceTree = "<group>";
@@ -530,6 +535,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92377F8A1AC9F146005E63DB /* Timer.m in Sources */,
 				DD58FF1617CEE747006C5079 /* main.m in Sources */,
 				9233AC681AA23F47006EE1E4 /* rscode.c in Sources */,
 				DD58FF1A17CEE747006C5079 /* AppDelegate.m in Sources */,

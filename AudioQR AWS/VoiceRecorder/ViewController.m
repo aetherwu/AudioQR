@@ -10,9 +10,11 @@
 #import "Cognito.h"
 #import "UrlShortener.h"
 #import "UIImage+MDQRCode.h"
+#import "Timer.h"
 
-
-@interface ViewController ()
+@interface ViewController () {
+    Timer *timer;
+}
 
 @end
 
@@ -40,6 +42,7 @@
                                                                           credentialsProvider:credentialsProvider];
     
     [AWSServiceManager defaultServiceManager].defaultServiceConfiguration = configuration;
+
     
 }
 
@@ -76,10 +79,20 @@
     }
 
 
-    //set up a timer in Start
-    //break if the audio is shorter than 0.5s.
+    //set up a time counter
+    timer = [[Timer alloc] init];
+    [timer startTimer];
+    
+    //set up a timer
     //force to end when it is longer than 60s.
-    //show alert notification
+    [NSTimer scheduledTimerWithTimeInterval:60.0
+                                     target:self
+                                   selector:@selector(stopRecording)
+                                   userInfo:nil
+                                    repeats:NO];
+    
+    //force the button to released state
+    //show recording progress bar.
     
     [_recorder record];
 }
@@ -87,15 +100,34 @@
 //start to record
 - (IBAction)recordButtonTouchEnd:(UIButton *)btn
 {
-    
+    [self stopRecording];
+}
+
+
+- (void) stopRecording {
+
     if (_recorder != nil && _recorder.isRecording) {
         
-        [_recorder stop];
+        // Do some work
+        [timer stopTimer];
+        float timelapse = [timer timeElapsedInMilliseconds];
+        NSLog(@"Total time was: %lf milliseconds", timelapse);
+        timer = nil;
         
-        [self toMp3: [_recorder.url lastPathComponent]];
-        
-        _recorder = nil;
+        if (timelapse<1000) {
+            //too short
+            NSLog(@"Recordinh is too short.");
+            [_recorder stop];
+            _recorder = nil;
+        }else{
+            //no longer than 60s
+            [_recorder stop];
+            [self toMp3: [_recorder.url lastPathComponent]];
+            _recorder = nil;
+            
+        }
     }
+
 }
 
 
@@ -216,7 +248,7 @@
                                NSLog(@"Got shorted url: %@", shortUrl);
 
                                //create sharing window and QR image
-                               CGFloat imageSize = ceilf(self.view.bounds.size.width * 0.6f);
+                               CGFloat imageSize = ceilf(self.view.bounds.size.width * 0.7f);
                                UIView *qrView = [[UIView alloc] initWithFrame:CGRectMake(0,12,320,620)];
                                qrView.backgroundColor = [UIColor whiteColor];
                                
@@ -224,6 +256,12 @@
                                
                                UIImage * qrCodeImg = [UIImage mdQRCodeForString:shortUrl size:imageView.bounds.size.width fillColor:[UIColor darkGrayColor]];
                                imageView.image = qrCodeImg;
+                               
+                               //add extra information to the image:
+                               //"Voice message, scan to hear"
+                               //add customized message to the image introducing the images
+                               //"more about this art piece."
+                               //add space-padding to the image.
                                
                                UIImageWriteToSavedPhotosAlbum(qrCodeImg, nil, nil, nil);
                                
@@ -246,7 +284,7 @@
                                           action:@selector(shareQR:)
                                 forControlEvents:UIControlEventTouchUpInside];
                                [buttonShare setTitle:@"Share" forState:UIControlStateNormal];
-                               buttonShare.frame = CGRectMake(250.0, 18.0, 80.0, 40.0);
+                               buttonShare.frame = CGRectMake(245.0, 18.0, 80.0, 40.0);
                                [qrView addSubview:buttonShare];
                                
                                
