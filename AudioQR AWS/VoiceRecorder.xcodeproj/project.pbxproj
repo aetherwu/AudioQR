@@ -420,11 +420,6 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = bugcloud;
-				TargetAttributes = {
-					DD58FF0517CEE747006C5079 = {
-						DevelopmentTeam = 657TPRFMM2;
-					};
-				};
 			};
 			buildConfigurationList = DD58FF0117CEE747006C5079 /* Build configuration list for PBXProject "VoiceRecorder" */;
 			compatibilityVersion = "Xcode 3.2";
