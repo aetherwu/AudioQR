@@ -34,7 +34,6 @@
 {
     [super viewDidLoad];
     
-    
     AWSCognitoCredentialsProvider *credentialsProvider = [AWSCognitoCredentialsProvider
                                                           credentialsWithRegionType:AWSRegionUSEast1
                                                           identityPoolId:@""];
@@ -55,6 +54,12 @@
 //add gesture control
 - (IBAction)recordButtonTouchStart:(UIButton *)btn
 {
+    
+    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                                action:@selector(handleSwipe)];
+    swipe.direction = UISwipeGestureRecognizerDirectionUp;
+    [btn addGestureRecognizer:swipe];
+    
     NSError *error = nil;
     if (_session.inputAvailable) {
         [_session setCategory:AVAudioSessionCategoryRecord error:&error];
@@ -117,7 +122,7 @@
         
         if (timelapse<1000) {
             //too short
-            NSLog(@"Recordinh is too short.");
+            NSLog(@"Recording is too short.");
             //show a notification bar on the top
             [JDStatusBarNotification showWithStatus:@"Too short." dismissAfter:1.0
                                           styleName:JDStatusBarStyleWarning];
@@ -138,6 +143,11 @@
 
 }
 
+- (void) handleSwipe {
+
+    [self stopRecording];
+
+}
 
 - (void) toMp3: (NSString *) filename
 {
