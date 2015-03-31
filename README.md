@@ -11,5 +11,9 @@
 - The audio can not less than 1s, otherwise the user will get a notification bar on the top that dismisses in 1s.
 - THe audio can not longer than 60s, otherwise the app will enter the process mode automatically.
 - Drag the finger out of the button to cancel the recording when needed. 
+- 
+
+###TODO
+- Share the audio link directly.
 
 ![](http://i.v2ex.co/SW6ZAQ35l.jpeg)
