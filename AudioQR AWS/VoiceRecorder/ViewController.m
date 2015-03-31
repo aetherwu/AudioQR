@@ -130,9 +130,6 @@
             [_recorder stop];
             _recorder = nil;
         }else{
-            //no longer than 60s
-            [JDStatusBarNotification showWithStatus:@"You can only record 60s per clip." dismissAfter:2.0
-                                          styleName:JDStatusBarStyleWarning];
             
             [_recorder stop];
             [self toMp3: [_recorder.url lastPathComponent]];
@@ -305,7 +302,8 @@
                                //"more about this art piece."
                                //add space-padding to the image.
                                
-                               UIImageWriteToSavedPhotosAlbum(qrCodeImg, nil, nil, nil);
+                               //Disable the auto saving to cameral roll since we have the sharing function.
+                               //UIImageWriteToSavedPhotosAlbum(qrCodeImg, nil, nil, nil);
                                
                                [qrView addSubview:imageView];
                                
