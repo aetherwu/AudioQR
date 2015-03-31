@@ -55,10 +55,10 @@
 - (IBAction)recordButtonTouchStart:(UIButton *)btn
 {
     
-    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self
-                                                                                action:@selector(handleSwipe)];
-    swipe.direction = UISwipeGestureRecognizerDirectionUp;
-    [btn addGestureRecognizer:swipe];
+    UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrag:)];
+    
+    recognizer.cancelsTouchesInView = NO; //So the user can still interact with controls in the modal view
+    [self.view addGestureRecognizer:recognizer];
     
     NSError *error = nil;
     if (_session.inputAvailable) {
@@ -143,10 +143,34 @@
 
 }
 
-- (void) handleSwipe {
+- (void)handleDrag:(UIPanGestureRecognizer *)sender
+{
+    //We care only about touching *up*, so let's not bother checking until the gesture ends
+    if (sender.state == UIGestureRecognizerStateEnded)
+    {
+        CGPoint location = [sender locationInView:self.view];
+        
+        //Let's test to see if the point is inside this button
+        if (![self.recordBtn pointInside:[self.recordBtn convertPoint:location fromView:self.view] withEvent:nil])
+        {
+             if (_recorder != nil && _recorder.isRecording) {
+                 [timer stopTimer];
+                 float timelapse = [timer timeElapsedInMilliseconds];
+                 NSLog(@"Total time was: %lf milliseconds", timelapse);
+                 timer = nil;
+                 
+                 
+                 NSLog(@"Recording cancelled.");
+                 [JDStatusBarNotification showWithStatus:@"Recording cancelled." dismissAfter:1.0
+                                                            styleName:JDStatusBarStyleWarning];
+                 
+                 [_recorder stop];
+                 _recorder = nil;
+                 
+             }
+        }
 
-    [self stopRecording];
-
+    }
 }
 
 - (void) toMp3: (NSString *) filename
