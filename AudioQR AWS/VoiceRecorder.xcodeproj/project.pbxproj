@@ -21,6 +21,9 @@
 		9233AC6A1AA23F47006EE1E4 /* UIImage+MDQRCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9233AC621AA23F47006EE1E4 /* UIImage+MDQRCode.m */; };
 		92377F871AC8DCBD005E63DB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92377F861AC8DCBD005E63DB /* Images.xcassets */; };
 		92377F8A1AC9F146005E63DB /* Timer.m in Sources */ = {isa = PBXBuildFile; fileRef = 92377F891AC9F146005E63DB /* Timer.m */; };
+		92377F921ACA17A4005E63DB /* JDStatusBarNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 92377F8D1ACA17A4005E63DB /* JDStatusBarNotification.m */; };
+		92377F931ACA17A4005E63DB /* JDStatusBarStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 92377F8F1ACA17A4005E63DB /* JDStatusBarStyle.m */; };
+		92377F941ACA17A4005E63DB /* JDStatusBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92377F911ACA17A4005E63DB /* JDStatusBarView.m */; };
 		DD4ACEC717D03186009D48A8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD58FF0917CEE747006C5079 /* UIKit.framework */; };
 		DD4ACEC817D03186009D48A8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD58FF0B17CEE747006C5079 /* Foundation.framework */; };
 		DD4ACEC917D03186009D48A8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD58FF0D17CEE747006C5079 /* CoreGraphics.framework */; };
@@ -90,6 +93,12 @@
 		92377F861AC8DCBD005E63DB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		92377F881AC9F12B005E63DB /* Timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
 		92377F891AC9F146005E63DB /* Timer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Timer.m; sourceTree = "<group>"; };
+		92377F8C1ACA17A4005E63DB /* JDStatusBarNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JDStatusBarNotification.h; sourceTree = "<group>"; };
+		92377F8D1ACA17A4005E63DB /* JDStatusBarNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JDStatusBarNotification.m; sourceTree = "<group>"; };
+		92377F8E1ACA17A4005E63DB /* JDStatusBarStyle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JDStatusBarStyle.h; sourceTree = "<group>"; };
+		92377F8F1ACA17A4005E63DB /* JDStatusBarStyle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JDStatusBarStyle.m; sourceTree = "<group>"; };
+		92377F901ACA17A4005E63DB /* JDStatusBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JDStatusBarView.h; sourceTree = "<group>"; };
+		92377F911ACA17A4005E63DB /* JDStatusBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JDStatusBarView.m; sourceTree = "<group>"; };
 		B0F730C060D3FBCB90364270 /* Pods-GHUnit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GHUnit.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GHUnit/Pods-GHUnit.debug.xcconfig"; sourceTree = "<group>"; };
 		D805B75778DD180B74E3B03A /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD4ACEC617D03186009D48A8 /* GHUnit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GHUnit.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,6 +206,19 @@
 			path = libqrencode;
 			sourceTree = "<group>";
 		};
+		92377F8B1ACA17A4005E63DB /* JDStatusBarNotification */ = {
+			isa = PBXGroup;
+			children = (
+				92377F8C1ACA17A4005E63DB /* JDStatusBarNotification.h */,
+				92377F8D1ACA17A4005E63DB /* JDStatusBarNotification.m */,
+				92377F8E1ACA17A4005E63DB /* JDStatusBarStyle.h */,
+				92377F8F1ACA17A4005E63DB /* JDStatusBarStyle.m */,
+				92377F901ACA17A4005E63DB /* JDStatusBarView.h */,
+				92377F911ACA17A4005E63DB /* JDStatusBarView.m */,
+			);
+			path = JDStatusBarNotification;
+			sourceTree = "<group>";
+		};
 		9C790E4D2EEBDF1934118599 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -267,6 +289,7 @@
 		DD58FF0F17CEE747006C5079 /* VoiceRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				92377F8B1ACA17A4005E63DB /* JDStatusBarNotification */,
 				9233AC511AA23F46006EE1E4 /* QR */,
 				9233AC451AA18F25006EE1E4 /* UrlShortener.h */,
 				9233AC461AA18F25006EE1E4 /* UrlShortener.m */,
@@ -537,6 +560,7 @@
 			files = (
 				92377F8A1AC9F146005E63DB /* Timer.m in Sources */,
 				DD58FF1617CEE747006C5079 /* main.m in Sources */,
+				92377F921ACA17A4005E63DB /* JDStatusBarNotification.m in Sources */,
 				9233AC681AA23F47006EE1E4 /* rscode.c in Sources */,
 				DD58FF1A17CEE747006C5079 /* AppDelegate.m in Sources */,
 				9233AC651AA23F47006EE1E4 /* qrencode.c in Sources */,
@@ -545,10 +569,12 @@
 				9233AC6A1AA23F47006EE1E4 /* UIImage+MDQRCode.m in Sources */,
 				9233AC471AA18F25006EE1E4 /* UrlShortener.m in Sources */,
 				DD4ACEEA17D07CDD009D48A8 /* SoundList.m in Sources */,
+				92377F931ACA17A4005E63DB /* JDStatusBarStyle.m in Sources */,
 				9233AC671AA23F47006EE1E4 /* qrspec.c in Sources */,
 				9233AC641AA23F47006EE1E4 /* mask.c in Sources */,
 				9233AC661AA23F47006EE1E4 /* qrinput.c in Sources */,
 				9233AC691AA23F47006EE1E4 /* split.c in Sources */,
+				92377F941ACA17A4005E63DB /* JDStatusBarView.m in Sources */,
 				9233AC631AA23F47006EE1E4 /* bitstream.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

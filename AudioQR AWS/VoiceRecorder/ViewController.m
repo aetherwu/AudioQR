@@ -11,6 +11,7 @@
 #import "UrlShortener.h"
 #import "UIImage+MDQRCode.h"
 #import "Timer.h"
+#import "JDStatusBarNotification.h"
 
 @interface ViewController () {
     Timer *timer;
@@ -117,10 +118,17 @@
         if (timelapse<1000) {
             //too short
             NSLog(@"Recordinh is too short.");
+            //show a notification bar on the top
+            [JDStatusBarNotification showWithStatus:@"Too short." dismissAfter:1.0
+                                          styleName:JDStatusBarStyleWarning];
+            
             [_recorder stop];
             _recorder = nil;
         }else{
             //no longer than 60s
+            [JDStatusBarNotification showWithStatus:@"You can only record 60s per clip." dismissAfter:2.0
+                                          styleName:JDStatusBarStyleWarning];
+            
             [_recorder stop];
             [self toMp3: [_recorder.url lastPathComponent]];
             _recorder = nil;
