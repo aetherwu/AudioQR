@@ -9,19 +9,23 @@
 #import "UrlShortener.h"
 #import "UIImage+MDQRCode.h"
 
+#import "Timer.h"
 
 #import "OSSClient.h"
 #import "OSSTool.h"
 #import "OSSData.h"
 #import "OSSLog.h"
 
+#import "JDStatusBarNotification.h"
 
-@interface ViewController ()
+
+@interface ViewController () {
+    Timer *timer;
+}
 
 @end
 
 @implementation ViewController {
-    
     OSSData *ossfileData;
 }
 
@@ -45,8 +49,15 @@
     [super didReceiveMemoryWarning];
 }
 
+
 - (IBAction)recordButtonTouchStart:(UIButton *)btn
 {
+    
+    UIPanGestureRecognizer *recognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleDrag:)];
+    
+    recognizer.cancelsTouchesInView = NO; //So the user can still interact with controls in the modal view
+    [self.view addGestureRecognizer:recognizer];
+    
     NSError *error = nil;
     if (_session.inputAvailable) {
         [_session setCategory:AVAudioSessionCategoryRecord error:&error];
@@ -70,26 +81,96 @@
         LOG(@"Error when preparing audio session :%@", [error localizedDescription]);
         return;
     }
-
+    
+    
+    //set up a time counter
+    timer = [[Timer alloc] init];
+    [timer startTimer];
+    
+    //set up a timer
+    //force to end when it is longer than 60s.
+    [NSTimer scheduledTimerWithTimeInterval:60.0
+                                     target:self
+                                   selector:@selector(stopRecording)
+                                   userInfo:nil
+                                    repeats:NO];
+    
+    //force the button to released state
+    //show recording progress bar.
+    
     [_recorder record];
 }
 
 //start to record
 - (IBAction)recordButtonTouchEnd:(UIButton *)btn
 {
+    [self stopRecording];
+}
+
+
+- (void) stopRecording {
+    
     if (_recorder != nil && _recorder.isRecording) {
         
-        [_recorder stop];
+        // Do some work
+        [timer stopTimer];
+        float timelapse = [timer timeElapsedInMilliseconds];
+        NSLog(@"Total time was: %lf milliseconds", timelapse);
+        timer = nil;
         
-        [self toMp3: [_recorder.url lastPathComponent]];
+        if (timelapse<1000) {
+            //too short
+            NSLog(@"Recording is too short.");
+            
+            //show a notification bar on the top
+            [JDStatusBarNotification showWithStatus:@"录音太短了" dismissAfter:1.0 styleName:JDStatusBarStyleWarning];
+            
+            [_recorder stop];
+            _recorder = nil;
+        }else{
+            
+            [_recorder stop];
+            [self toMp3: [_recorder.url lastPathComponent]];
+            _recorder = nil;
+            
+        }
+    }
+    
+}
+
+- (void)handleDrag:(UIPanGestureRecognizer *)sender
+{
+    //We care only about touching *up*, so let's not bother checking until the gesture ends
+    if (sender.state == UIGestureRecognizerStateEnded)
+    {
+        CGPoint location = [sender locationInView:self.view];
         
-        _recorder = nil;
+        //Let's test to see if the point is inside this button
+        if (![self.recordBtn pointInside:[self.recordBtn convertPoint:location fromView:self.view] withEvent:nil])
+        {
+            if (_recorder != nil && _recorder.isRecording) {
+                [timer stopTimer];
+                float timelapse = [timer timeElapsedInMilliseconds];
+                NSLog(@"Total time was: %lf milliseconds", timelapse);
+                timer = nil;
+                
+                
+                NSLog(@"Recording cancelled.");
+                [JDStatusBarNotification showWithStatus:@"录音已取消" dismissAfter:1.0 styleName:JDStatusBarStyleWarning];
+                
+                [_recorder stop];
+                _recorder = nil;
+                
+            }
+        }
+        
     }
 }
 
 
 - (void) toMp3: (NSString *) filename
 {
+    [JDStatusBarNotification showWithStatus:@"压缩和发布中" dismissAfter:1.0 styleName:JDStatusBarStyleWarning];
     
     NSString *mp3FileName = @"Mp3File";
     mp3FileName = [mp3FileName stringByAppendingString:@".mp3"];
@@ -163,9 +244,9 @@
         
         OSSClient *ossclient = [OSSClient sharedInstanceManage];
         [ossclient setGlobalDefaultBucketHostId:@"oss-cn-shenzhen.aliyuncs.com"];
-        NSString *accessKey = @"YOURKEY";
-        NSString *secretKey = @"YOURKEY";
-        NSString *yourBucket = @"YOURBUCKET";
+        NSString *accessKey = @"";
+        NSString *secretKey = @"";
+        NSString *yourBucket = @"";
         
         [ossclient setGenerateToken:^(NSString *method, NSString *md5, NSString *type, NSString *date, NSString *xoss, NSString *resource){
             NSString *signature = nil;
@@ -198,24 +279,50 @@
                     NSLog(@"Could not delete file -:%@ ",[error localizedDescription]);
                 
                 
-                NSString *ossfile = [NSString stringWithFormat:@"http://YOURBUCKET.oss-cn-shenzhen.aliyuncs.com/%@", uniqueFileName];
+                NSString *ossfile = [NSString stringWithFormat:@"http://voiceqr.oss-cn-shenzhen.aliyuncs.com/%@", uniqueFileName];
 
                     //create sharing window and QR image
-                    CGFloat imageSize = ceilf(self.view.bounds.size.width * 0.6f);
-                    UIView *qrView = [[UIView alloc] initWithFrame:CGRectMake(0,12,320,320)];
+                    CGFloat imageSize = ceilf(self.view.bounds.size.width * 0.7f);
+                    UIView *qrView = [[UIView alloc] initWithFrame:CGRectMake(0,12,320,620)];
                     qrView.backgroundColor = [UIColor whiteColor];
                     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(floorf(self.view.bounds.size.width * 0.5f - imageSize * 0.5f), floorf(self.view.bounds.size.height * 0.5f - imageSize * 0.5f), imageSize, imageSize)];
                     UIImage * qrCodeImg = [UIImage mdQRCodeForString:ossfile size:imageView.bounds.size.width fillColor:[UIColor darkGrayColor]];
                     imageView.image = qrCodeImg;
-                    UIImageWriteToSavedPhotosAlbum(qrCodeImg, nil, nil, nil);
+                
+                    //UIImageWriteToSavedPhotosAlbum(qrCodeImg, nil, nil, nil);
                     
-                    //add dismiss button
-                    
-                    //add share button
-                    
-                    
-                    [qrView addSubview:imageView];
-                    [self.view addSubview:qrView];
+                _audioURL = ossfile;
+                
+                //add extra information to the image:
+                //"Voice message, scan to hear"
+                //add customized message to the image introducing the images
+                //"more about this art piece."
+                //add space-padding to the image.
+                
+                //Disable the auto saving to cameral roll since we have the sharing function.
+                //UIImageWriteToSavedPhotosAlbum(qrCodeImg, nil, nil, nil);
+                
+                [qrView addSubview:imageView];
+                
+                [self.view addSubview:qrView];
+                
+                //add dismiss button
+                UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+                [button addTarget:self
+                           action:@selector(dismissQR:)
+                 forControlEvents:UIControlEventTouchUpInside];
+                [button setTitle:@"再录一条" forState:UIControlStateNormal];
+                button.frame = CGRectMake(15.0, 18.0, 80.0, 40.0);
+                [qrView addSubview:button];
+                
+                //add share button
+                UIButton *buttonShare = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+                [buttonShare addTarget:self
+                                action:@selector(shareQR:)
+                      forControlEvents:UIControlEventTouchUpInside];
+                [buttonShare setTitle:@"分享" forState:UIControlStateNormal];
+                buttonShare.frame = CGRectMake(290.0, 18.0, 80.0, 40.0);
+                [qrView addSubview:buttonShare];
 
             
             }
@@ -227,6 +334,45 @@
             NSLog(@"current get %f", progress);
         }];
  
+    }
+    
+}
+
+
+- (void) dismissQR:(UIButton *)sender {
+    
+    [[sender superview] removeFromSuperview];
+    
+}
+
+
+- (void) shareQR:(UIButton *)sender {
+    
+    UIImage *qrImage;
+    
+    for(UIImageView *aView in [[sender superview] subviews]){
+        if([aView isKindOfClass:[UIImageView class]]){
+            //YourClass found!!
+            qrImage = aView.image;
+            
+            NSArray *objectsToShare = @[qrImage];
+            
+            UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
+            
+            NSArray *excludeActivities = @[UIActivityTypeCopyToPasteboard,
+                                           UIActivityTypeAssignToContact,
+                                           UIActivityTypeAddToReadingList,
+                                           UIActivityTypePostToFlickr,
+                                           UIActivityTypePostToVimeo,
+                                           UIActivityTypePostToTencentWeibo
+                                           ];
+            
+            activityVC.excludedActivityTypes = excludeActivities;
+            
+            [self presentViewController:activityVC animated:YES completion:nil];
+            
+            return;
+        }
     }
     
 }

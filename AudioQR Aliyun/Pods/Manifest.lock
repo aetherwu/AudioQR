@@ -1,0 +1,10 @@
+PODS:
+  - JDStatusBarNotification (1.5.1)
+
+DEPENDENCIES:
+  - JDStatusBarNotification
+
+SPEC CHECKSUMS:
+  JDStatusBarNotification: 83c7d7a4e1e0d09528bcb98827fe4fc99dbdd6aa
+
+COCOAPODS: 0.35.0

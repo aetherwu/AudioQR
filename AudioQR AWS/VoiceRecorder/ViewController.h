@@ -8,6 +8,8 @@
 
 @interface ViewController : UIViewController
 
+@property (nonatomic, strong) NSString *audioURL;
+
 @property (nonatomic, strong) AVAudioRecorder *recorder;
 @property (nonatomic, strong) AVAudioSession *session;
 @property (nonatomic, weak) IBOutlet UIButton *recordBtn;
