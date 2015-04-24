@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D62020F1AEAA71B00FA9B14 /* Records.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D62020D1AEAA71B00FA9B14 /* Records.xcdatamodeld */; };
+		2D6202111AEAA95100FA9B14 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6202101AEAA95100FA9B14 /* CoreData.framework */; };
 		2F0249DBAF92EF846F919447 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D805B75778DD180B74E3B03A /* libPods.a */; };
 		81951956FF614D3DAE23061E /* libPods-GHUnit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 749E722348544E60AE3A0D91 /* libPods-GHUnit.a */; };
 		9233AC411AA14945006EE1E4 /* libmp3lame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9233AC401AA14945006EE1E4 /* libmp3lame.a */; };
@@ -54,6 +56,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2D62020E1AEAA71B00FA9B14 /* Records.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Records.xcdatamodel; sourceTree = "<group>"; };
+		2D6202101AEAA95100FA9B14 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2DA9DF10BBD73298EAE71F47 /* Pods-GHUnit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GHUnit.release.xcconfig"; path = "Pods/Target Support Files/Pods-GHUnit/Pods-GHUnit.release.xcconfig"; sourceTree = "<group>"; };
 		602E02DF504BE7C6C13A1086 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		749E722348544E60AE3A0D91 /* libPods-GHUnit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GHUnit.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -143,6 +147,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D6202111AEAA95100FA9B14 /* CoreData.framework in Frameworks */,
 				9233AC411AA14945006EE1E4 /* libmp3lame.a in Frameworks */,
 				DD58FF3717CEEBF0006C5079 /* AVFoundation.framework in Frameworks */,
 				DD58FF0A17CEE747006C5079 /* UIKit.framework in Frameworks */,
@@ -255,6 +260,7 @@
 		DD58FF0817CEE747006C5079 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2D6202101AEAA95100FA9B14 /* CoreData.framework */,
 				DD58FF3617CEEBF0006C5079 /* AVFoundation.framework */,
 				DD4ACEDF17D031F9009D48A8 /* QuartzCore.framework */,
 				DD58FF0917CEE747006C5079 /* UIKit.framework */,
@@ -269,6 +275,7 @@
 		DD58FF0F17CEE747006C5079 /* VoiceRecorder */ = {
 			isa = PBXGroup;
 			children = (
+				2D62020D1AEAA71B00FA9B14 /* Records.xcdatamodeld */,
 				92377F8B1ACA17A4005E63DB /* JDStatusBarNotification */,
 				9233AC511AA23F46006EE1E4 /* QR */,
 				9233AC451AA18F25006EE1E4 /* UrlShortener.h */,
@@ -376,6 +383,11 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = bugcloud;
+				TargetAttributes = {
+					DD58FF0517CEE747006C5079 = {
+						DevelopmentTeam = 657TPRFMM2;
+					};
+				};
 			};
 			buildConfigurationList = DD58FF0117CEE747006C5079 /* Build configuration list for PBXProject "VoiceRecorder" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -511,6 +523,7 @@
 				DD58FF2317CEE747006C5079 /* ViewController.m in Sources */,
 				DD4ACEE617D03424009D48A8 /* Sound.m in Sources */,
 				9233AC6A1AA23F47006EE1E4 /* UIImage+MDQRCode.m in Sources */,
+				2D62020F1AEAA71B00FA9B14 /* Records.xcdatamodeld in Sources */,
 				9233AC471AA18F25006EE1E4 /* UrlShortener.m in Sources */,
 				DD4ACEEA17D07CDD009D48A8 /* SoundList.m in Sources */,
 				92377F931ACA17A4005E63DB /* JDStatusBarStyle.m in Sources */,
@@ -706,6 +719,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2D62020D1AEAA71B00FA9B14 /* Records.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2D62020E1AEAA71B00FA9B14 /* Records.xcdatamodel */,
+			);
+			currentVersion = 2D62020E1AEAA71B00FA9B14 /* Records.xcdatamodel */;
+			name = Records.xcdatamodeld;
+			path = ../Records.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = DD58FEFE17CEE747006C5079 /* Project object */;
 }

@@ -4,6 +4,7 @@
 //
 
 #import "ViewController.h"
+#import "AppDelegate.h"
 #import "lame.h"
 #import "S3.h"
 #import "AWSCore.h"
@@ -21,6 +22,7 @@
 
 @implementation ViewController
 
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:@"ViewController" bundle:nil];
@@ -34,9 +36,10 @@
 {
     [super viewDidLoad];
     
+    
     AWSCognitoCredentialsProvider *credentialsProvider = [AWSCognitoCredentialsProvider
                                                           credentialsWithRegionType:AWSRegionUSEast1
-                                                          identityPoolId:@""];
+                                                          identityPoolId:@"us-east-1:9781c935-02bb-444d-b2ad-59d724d1ff08"];
     
     AWSServiceConfiguration *configuration = [AWSServiceConfiguration configurationWithRegion:AWSRegionUSEast1
                                                                           credentialsProvider:credentialsProvider];
@@ -51,7 +54,6 @@
     [super didReceiveMemoryWarning];
 }
 
-//add gesture control
 - (IBAction)recordButtonTouchStart:(UIButton *)btn
 {
     
@@ -294,7 +296,11 @@
                                UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(floorf(self.view.bounds.size.width * 0.5f - imageSize * 0.5f), floorf(self.view.bounds.size.height * 0.5f - imageSize * 0.5f), imageSize, imageSize)];
                                
                                UIImage * qrCodeImg = [UIImage mdQRCodeForString:shortUrl size:imageView.bounds.size.width fillColor:[UIColor darkGrayColor]];
+                               
                                imageView.image = qrCodeImg;
+                               //imageView.image = [self drawText:[NSString stringWithFormat:@"AudioQR: %@", shortUrl] inImage:qrCodeImg atPoint:CGPointMake(0, 0)];
+                               
+                               _audioURL = S3file;
                                
                                //add extra information to the image:
                                //"Voice message, scan to hear"
@@ -353,12 +359,13 @@
 - (void) shareQR:(UIButton *)sender {
     
     UIImage *qrImage;
+    
     for(UIImageView *aView in [[sender superview] subviews]){
         if([aView isKindOfClass:[UIImageView class]]){
             //YourClass found!!
             qrImage = aView.image;
             
-            NSArray *objectsToShare = @[qrImage];
+            NSArray *objectsToShare = @[qrImage, _audioURL];
             
             UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:objectsToShare applicationActivities:nil];
             
@@ -380,6 +387,103 @@
     
 }
 
+/*-------------
+ 
+ Audio history and management
+ 
+ ---------------*/
+
+
+- (void) replay {}
+
+
+
+- (void) saveRecord: (NSURL *)url {
+    //save date and url to database
+    
+    //
+    //parepare to save a tunecate to database
+    AppDelegate* appDelegate = [AppDelegate sharedAppDelegate];
+    NSManagedObjectContext* context = appDelegate.managedObjectContext;
+    
+    //add a new item
+    NSManagedObject *newEntry = [NSEntityDescription insertNewObjectForEntityForName:@"Record" inManagedObjectContext:context];
+    
+    //TODO igore upper/lower case
+    
+    [newEntry setValue:url forKey:@"url"];
+    [newEntry setValue:[NSDate date] forKey:@"date"];
+    
+    //
+    //prepared to save database
+    //
+    
+    
+    // Save the object to persistent store
+    NSError *error;
+    if (![context save:&error]) {
+        NSLog(@"Can't Save! %@ %@", error, [error localizedDescription]);
+    }
+
+}
+
+
+
+- (void) showRecords {
+    //load database
+    
+    
+    //init the table view
+    
+    
+    //show the table view
+
+}
+
+- (void) dismissRecords {
+    
+
+}
+
+
+- (void) reShare {}
+
+
+
+- (void) deleteRecord {}
+
+
+
+
+/*-------------
+
+ 
+Utilities
+ 
+---------------*/
+
+- (UIImage *) drawText:(NSString*) text
+             inImage:(UIImage*)  image
+             atPoint:(CGPoint)   point
+{
+    
+    UIFont *font = [UIFont boldSystemFontOfSize:12];
+    
+    NSDictionary *attrsDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                                     font, NSFontAttributeName,
+                                     [NSNumber numberWithFloat:1.0], NSBaselineOffsetAttributeName, nil];
+    
+    UIGraphicsBeginImageContext(image.size);
+    [image drawInRect:CGRectMake(0,0,image.size.width,image.size.height)];
+    CGRect rect = CGRectMake(point.x, point.y, image.size.width, image.size.height);
+    [[UIColor whiteColor] set];
+    
+    [text drawInRect:CGRectIntegral(rect) withAttributes:attrsDictionary];
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
 
 + (NSString *)filePathFromCurrentTime
 {
@@ -390,4 +494,5 @@
     NSString *fileName = [formatter stringFromDate:[NSDate date]];
     return [dir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.caf", fileName]];
 }
+
 @end

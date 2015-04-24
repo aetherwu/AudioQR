@@ -244,9 +244,9 @@
         
         OSSClient *ossclient = [OSSClient sharedInstanceManage];
         [ossclient setGlobalDefaultBucketHostId:@"oss-cn-shenzhen.aliyuncs.com"];
-        NSString *accessKey = @"";
-        NSString *secretKey = @"";
-        NSString *yourBucket = @"";
+        NSString *accessKey = @"25sEjICllmdPculA";
+        NSString *secretKey = @"5fRh3rWmvyTNc2yyHHSZDa8e6Hnae2";
+        NSString *yourBucket = @"voiceqr";
         
         [ossclient setGenerateToken:^(NSString *method, NSString *md5, NSString *type, NSString *date, NSString *xoss, NSString *resource){
             NSString *signature = nil;
