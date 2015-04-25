@@ -5,6 +5,7 @@
 
 #import "ViewController.h"
 #import "AppDelegate.h"
+#import "RecordTable.h"
 #import "lame.h"
 #import "S3.h"
 #import "AWSCore.h"
@@ -20,7 +21,11 @@
 
 @end
 
-@implementation ViewController
+@implementation ViewController {
+    UITableView *tableView;
+}
+
+@synthesize searchResults;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -45,6 +50,7 @@
                                                                           credentialsProvider:credentialsProvider];
     
     [AWSServiceManager defaultServiceManager].defaultServiceConfiguration = configuration;
+    
 
     
 }
@@ -286,7 +292,10 @@
                            UrlShortener *shortener = [[UrlShortener alloc] init];
                            [shortener shortenUrl:S3file withService:UrlShortenerServiceIsgd completion:^(NSString *shortUrl) {
                                
-                               NSLog(@"Got shorted url: %@", shortUrl);
+                               NSLog(@"Got shorted url: %@", S3file);
+                               
+                               //save the history record
+                               [self saveRecord:shortUrl];
 
                                //create sharing window and QR image
                                CGFloat imageSize = ceilf(self.view.bounds.size.width * 0.7f);
@@ -398,7 +407,7 @@
 
 
 
-- (void) saveRecord: (NSURL *)url {
+- (void) saveRecord: (NSString *)url {
     //save date and url to database
     
     //
@@ -407,7 +416,7 @@
     NSManagedObjectContext* context = appDelegate.managedObjectContext;
     
     //add a new item
-    NSManagedObject *newEntry = [NSEntityDescription insertNewObjectForEntityForName:@"Record" inManagedObjectContext:context];
+    NSManagedObject *newEntry = [NSEntityDescription insertNewObjectForEntityForName:@"Records" inManagedObjectContext:context];
     
     //TODO igore upper/lower case
     
@@ -417,7 +426,6 @@
     //
     //prepared to save database
     //
-    
     
     // Save the object to persistent store
     NSError *error;
@@ -429,20 +437,67 @@
 
 
 
-- (void) showRecords {
+- (IBAction)showHistory:(UIButton *)btn {
+
     //load database
+    // Fetch default previous search keywords from persistent data store
+    AppDelegate* appDelegate = [AppDelegate sharedAppDelegate];
+    NSManagedObjectContext* context = appDelegate.managedObjectContext;
     
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Records"];
+    
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO];
+    [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    [fetchRequest setReturnsObjectsAsFaults:NO];
+    
+    NSMutableArray *historyList;
+    NSMutableArray* tmpArray = [[NSMutableArray alloc] init];
+    
+    historyList = [[context executeFetchRequest:fetchRequest error:nil] mutableCopy];
+    
+    for (int i = 0; i<[historyList count]; i++){
+        [tmpArray addObject: [[historyList objectAtIndex:i] valueForKey:@"date"]];
+    }
+    
+    searchResults = tmpArray;
     
     //init the table view
+    // create a table view and a scroll view
+    // init table view
+    
+    UIView *tableContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, 24,320,620)];
+    tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    
+    // must set delegate & dataSource, otherwise the the table will be empty and not responsive
+    tableView.delegate = self;
+    tableView.dataSource = self;
+    tableView.backgroundColor = [UIColor whiteColor];
+    
+    // add to canvas
+    [tableContainerView addSubview:tableView];
+    [tableView reloadData];
+    
+    
+    UIButton *dissmissTable = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [dissmissTable addTarget:self
+                      action:@selector(dismissRecords:)
+            forControlEvents:UIControlEventTouchUpInside];
+    [dissmissTable setTitle:@"Close" forState:UIControlStateNormal];
+    dissmissTable.frame = CGRectMake(245.0, 5, 80.0, 40.0);
+    
+    [tableContainerView addSubview:dissmissTable];
+    
+    [self.view addSubview:tableContainerView];
     
     
     //show the table view
 
 }
 
-- (void) dismissRecords {
+- (void) dismissRecords:(UIButton *)sender {
     
-
+    [[sender superview] removeFromSuperview];
+    
 }
 
 
@@ -493,6 +548,59 @@ Utilities
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSString *fileName = [formatter stringFromDate:[NSDate date]];
     return [dir stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.caf", fileName]];
+}
+
+/*-------------
+ 
+ 
+ table operation
+ 
+ ---------------*/
+
+#pragma mark - UITableViewDataSource
+// number of section(s), now I assume there is only 1 section
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)theTableView
+{
+    return 1;
+}
+
+// number of row in the section, I assume there is only 1 row
+- (NSInteger)tableView:(UITableView *)theTableView numberOfRowsInSection:(NSInteger)section
+{
+    return [searchResults count];
+}
+
+// the cell will be returned to the tableView
+- (UITableViewCell *)tableView:(UITableView *)theTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *cellIdentifier = @"HistoryCell";
+    
+    // Similar to UITableViewCell, but
+    RecordTable *cell = (RecordTable *)[theTableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    if (cell == nil) {
+        cell = [[RecordTable alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+    }
+    
+    // Just want to test, so I hardcode the data
+    [cell.textLabel setText: [NSString stringWithFormat:@"%@", [searchResults objectAtIndex:indexPath.row]] ];
+    
+    return cell;
+}
+
+#pragma mark - UITableViewDelegate
+// when user tap the row, what action you want to perform
+- (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"selected %ld row", (long)indexPath.row);
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    return @"Audio library:";
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 50;
 }
 
 @end

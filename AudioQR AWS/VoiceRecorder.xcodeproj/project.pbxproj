@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2D62020F1AEAA71B00FA9B14 /* Records.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D62020D1AEAA71B00FA9B14 /* Records.xcdatamodeld */; };
 		2D6202111AEAA95100FA9B14 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6202101AEAA95100FA9B14 /* CoreData.framework */; };
+		2D6202131AEAF4F600FA9B14 /* RecordTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D6202121AEAF4F600FA9B14 /* RecordTable.m */; };
 		2F0249DBAF92EF846F919447 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D805B75778DD180B74E3B03A /* libPods.a */; };
 		81951956FF614D3DAE23061E /* libPods-GHUnit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 749E722348544E60AE3A0D91 /* libPods-GHUnit.a */; };
 		9233AC411AA14945006EE1E4 /* libmp3lame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9233AC401AA14945006EE1E4 /* libmp3lame.a */; };
@@ -58,6 +59,8 @@
 /* Begin PBXFileReference section */
 		2D62020E1AEAA71B00FA9B14 /* Records.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Records.xcdatamodel; sourceTree = "<group>"; };
 		2D6202101AEAA95100FA9B14 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		2D6202121AEAF4F600FA9B14 /* RecordTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordTable.m; sourceTree = "<group>"; };
+		2D6202141AEAF50700FA9B14 /* RecordTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RecordTable.h; sourceTree = "<group>"; };
 		2DA9DF10BBD73298EAE71F47 /* Pods-GHUnit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GHUnit.release.xcconfig"; path = "Pods/Target Support Files/Pods-GHUnit/Pods-GHUnit.release.xcconfig"; sourceTree = "<group>"; };
 		602E02DF504BE7C6C13A1086 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		749E722348544E60AE3A0D91 /* libPods-GHUnit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GHUnit.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -292,6 +295,8 @@
 				DD58FF1917CEE747006C5079 /* AppDelegate.m */,
 				DD58FF2117CEE747006C5079 /* ViewController.h */,
 				DD58FF2217CEE747006C5079 /* ViewController.m */,
+				2D6202141AEAF50700FA9B14 /* RecordTable.h */,
+				2D6202121AEAF4F600FA9B14 /* RecordTable.m */,
 				DD58FF2417CEE747006C5079 /* ViewController.xib */,
 				92377F861AC8DCBD005E63DB /* Images.xcassets */,
 				DD58FF1017CEE747006C5079 /* Supporting Files */,
@@ -517,6 +522,7 @@
 				92377F8A1AC9F146005E63DB /* Timer.m in Sources */,
 				DD58FF1617CEE747006C5079 /* main.m in Sources */,
 				92377F921ACA17A4005E63DB /* JDStatusBarNotification.m in Sources */,
+				2D6202131AEAF4F600FA9B14 /* RecordTable.m in Sources */,
 				9233AC681AA23F47006EE1E4 /* rscode.c in Sources */,
 				DD58FF1A17CEE747006C5079 /* AppDelegate.m in Sources */,
 				9233AC651AA23F47006EE1E4 /* qrencode.c in Sources */,
