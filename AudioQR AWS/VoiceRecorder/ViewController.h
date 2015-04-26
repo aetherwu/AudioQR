@@ -9,6 +9,7 @@
 @interface ViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, strong) NSString *audioURL;
+@property (nonatomic, strong) NSDate *audioDate;
 
 @property (nonatomic, strong) AVAudioRecorder *recorder;
 @property (nonatomic, strong) AVAudioSession *session;

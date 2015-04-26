@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D39AAB21AEC6792009815B5 /* bg1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D39AAB11AEC6792009815B5 /* bg1.png */; };
 		2D62020F1AEAA71B00FA9B14 /* Records.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2D62020D1AEAA71B00FA9B14 /* Records.xcdatamodeld */; };
 		2D6202111AEAA95100FA9B14 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D6202101AEAA95100FA9B14 /* CoreData.framework */; };
 		2D6202131AEAF4F600FA9B14 /* RecordTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 2D6202121AEAF4F600FA9B14 /* RecordTable.m */; };
+		2DE0ECAB1AEB2BEE00AA7A84 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DE0ECAA1AEB2BEE00AA7A84 /* AudioToolbox.framework */; };
+		2DE0ECAD1AEB2BF800AA7A84 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DE0ECAC1AEB2BF800AA7A84 /* MediaPlayer.framework */; };
 		2F0249DBAF92EF846F919447 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D805B75778DD180B74E3B03A /* libPods.a */; };
 		81951956FF614D3DAE23061E /* libPods-GHUnit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 749E722348544E60AE3A0D91 /* libPods-GHUnit.a */; };
 		9233AC411AA14945006EE1E4 /* libmp3lame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9233AC401AA14945006EE1E4 /* libmp3lame.a */; };
@@ -57,11 +60,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2D39AAB11AEC6792009815B5 /* bg1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg1.png; sourceTree = "<group>"; };
 		2D62020E1AEAA71B00FA9B14 /* Records.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Records.xcdatamodel; sourceTree = "<group>"; };
 		2D6202101AEAA95100FA9B14 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		2D6202121AEAF4F600FA9B14 /* RecordTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordTable.m; sourceTree = "<group>"; };
 		2D6202141AEAF50700FA9B14 /* RecordTable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RecordTable.h; sourceTree = "<group>"; };
 		2DA9DF10BBD73298EAE71F47 /* Pods-GHUnit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GHUnit.release.xcconfig"; path = "Pods/Target Support Files/Pods-GHUnit/Pods-GHUnit.release.xcconfig"; sourceTree = "<group>"; };
+		2DE0ECAA1AEB2BEE00AA7A84 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AudioToolbox.framework; sourceTree = "<group>"; };
+		2DE0ECAC1AEB2BF800AA7A84 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MediaPlayer.framework; sourceTree = "<group>"; };
 		602E02DF504BE7C6C13A1086 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		749E722348544E60AE3A0D91 /* libPods-GHUnit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GHUnit.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E40E5B640B3108644353DAA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -153,9 +159,11 @@
 				2D6202111AEAA95100FA9B14 /* CoreData.framework in Frameworks */,
 				9233AC411AA14945006EE1E4 /* libmp3lame.a in Frameworks */,
 				DD58FF3717CEEBF0006C5079 /* AVFoundation.framework in Frameworks */,
+				2DE0ECAB1AEB2BEE00AA7A84 /* AudioToolbox.framework in Frameworks */,
 				DD58FF0A17CEE747006C5079 /* UIKit.framework in Frameworks */,
 				DD58FF0C17CEE747006C5079 /* Foundation.framework in Frameworks */,
 				DD58FF0E17CEE747006C5079 /* CoreGraphics.framework in Frameworks */,
+				2DE0ECAD1AEB2BF800AA7A84 /* MediaPlayer.framework in Frameworks */,
 				2F0249DBAF92EF846F919447 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -263,6 +271,8 @@
 		DD58FF0817CEE747006C5079 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2DE0ECAC1AEB2BF800AA7A84 /* MediaPlayer.framework */,
+				2DE0ECAA1AEB2BEE00AA7A84 /* AudioToolbox.framework */,
 				2D6202101AEAA95100FA9B14 /* CoreData.framework */,
 				DD58FF3617CEEBF0006C5079 /* AVFoundation.framework */,
 				DD4ACEDF17D031F9009D48A8 /* QuartzCore.framework */,
@@ -309,6 +319,7 @@
 		DD58FF1017CEE747006C5079 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2D39AAB11AEC6792009815B5 /* bg1.png */,
 				DD58FF1117CEE747006C5079 /* VoiceRecorder-Info.plist */,
 				DD58FF1217CEE747006C5079 /* InfoPlist.strings */,
 				DD58FF1517CEE747006C5079 /* main.m */,
@@ -428,6 +439,7 @@
 				DD58FF1C17CEE747006C5079 /* Default.png in Resources */,
 				DD58FF1E17CEE747006C5079 /* Default@2x.png in Resources */,
 				92377F871AC8DCBD005E63DB /* Images.xcassets in Resources */,
+				2D39AAB21AEC6792009815B5 /* bg1.png in Resources */,
 				DD58FF2017CEE747006C5079 /* Default-568h@2x.png in Resources */,
 				DD58FF2617CEE747006C5079 /* ViewController.xib in Resources */,
 				DDD9FFCB17CF4B8F001E70D9 /* btn-record-highlight.png in Resources */,
@@ -661,6 +673,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VoiceRecorder/VoiceRecorder-Prefix.pch";
 				INFOPLIST_FILE = "VoiceRecorder/VoiceRecorder-Info.plist";
@@ -681,6 +697,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "VoiceRecorder/VoiceRecorder-Prefix.pch";
 				INFOPLIST_FILE = "VoiceRecorder/VoiceRecorder-Info.plist";

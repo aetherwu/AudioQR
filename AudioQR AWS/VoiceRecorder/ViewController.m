@@ -15,10 +15,12 @@
 #import "Timer.h"
 #import "JDStatusBarNotification.h"
 
-@interface ViewController () {
+@interface ViewController () <AVAudioPlayerDelegate> {
     Timer *timer;
 }
-
+    @property (strong, nonatomic) NSData *mp3Data;
+    @property (strong, nonatomic) AVAudioPlayer *audioPlayer;
+    @property (strong) NSMutableArray *records;
 @end
 
 @implementation ViewController {
@@ -40,6 +42,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
     
     
     AWSCognitoCredentialsProvider *credentialsProvider = [AWSCognitoCredentialsProvider
@@ -286,68 +290,14 @@
                             else
                                NSLog(@"Could not delete file -:%@ ",[error localizedDescription]);
                            
-                           
                            NSString *S3file = [NSString stringWithFormat:@"http://s3.amazonaws.com/mindlit/%@", uniqueFileName];
                            
-                           UrlShortener *shortener = [[UrlShortener alloc] init];
-                           [shortener shortenUrl:S3file withService:UrlShortenerServiceIsgd completion:^(NSString *shortUrl) {
-                               
-                               NSLog(@"Got shorted url: %@", S3file);
-                               
-                               //save the history record
-                               [self saveRecord:shortUrl];
-
-                               //create sharing window and QR image
-                               CGFloat imageSize = ceilf(self.view.bounds.size.width * 0.7f);
-                               UIView *qrView = [[UIView alloc] initWithFrame:CGRectMake(0,12,320,620)];
-                               qrView.backgroundColor = [UIColor whiteColor];
-                               
-                               UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(floorf(self.view.bounds.size.width * 0.5f - imageSize * 0.5f), floorf(self.view.bounds.size.height * 0.5f - imageSize * 0.5f), imageSize, imageSize)];
-                               
-                               UIImage * qrCodeImg = [UIImage mdQRCodeForString:shortUrl size:imageView.bounds.size.width fillColor:[UIColor darkGrayColor]];
-                               
-                               imageView.image = qrCodeImg;
-                               //imageView.image = [self drawText:[NSString stringWithFormat:@"AudioQR: %@", shortUrl] inImage:qrCodeImg atPoint:CGPointMake(0, 0)];
-                               
-                               _audioURL = S3file;
-                               
-                               //add extra information to the image:
-                               //"Voice message, scan to hear"
-                               //add customized message to the image introducing the images
-                               //"more about this art piece."
-                               //add space-padding to the image.
-                               
-                               //Disable the auto saving to cameral roll since we have the sharing function.
-                               //UIImageWriteToSavedPhotosAlbum(qrCodeImg, nil, nil, nil);
-                               
-                               [qrView addSubview:imageView];
-                               
-                               [self.view addSubview:qrView];
-                               
-                               //add dismiss button
-                               UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-                               [button addTarget:self
-                                          action:@selector(dismissQR:)
-                                forControlEvents:UIControlEventTouchUpInside];
-                               [button setTitle:@"Close" forState:UIControlStateNormal];
-                               button.frame = CGRectMake(0.0, 18.0, 80.0, 40.0);
-                               [qrView addSubview:button];
-                               
-                               //add share button
-                               UIButton *buttonShare = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-                               [buttonShare addTarget:self
-                                          action:@selector(shareQR:)
-                                forControlEvents:UIControlEventTouchUpInside];
-                               [buttonShare setTitle:@"Share" forState:UIControlStateNormal];
-                               buttonShare.frame = CGRectMake(245.0, 18.0, 80.0, 40.0);
-                               [qrView addSubview:buttonShare];
-                               
-                               
-                           } error:^(NSError *error) {
-                               // Handle the error.
-                               NSLog(@"Error: %@", [error localizedDescription]);
-                           }];
+                           //save the history record
+                           [self saveRecord:S3file];
+                           _audioURL = S3file;
+                           _audioDate = [NSDate new];
                            
+                           [self createShareView];
                            
                        }
                        return nil;
@@ -358,8 +308,110 @@
     
 }
 
-- (void) dismissQR:(UIButton *)sender {
+- (void) createShareView {
+    
+    //TODO get shorted url from database when offline.
+    
+    UrlShortener *shortener = [[UrlShortener alloc] init];
+    [shortener shortenUrl:_audioURL withService:UrlShortenerServiceIsgd completion:^(NSString *shortUrl) {
+        
+        NSLog(@"Got shorted url: %@", shortUrl);
+        
+        //create sharing window and QR image
+        CGFloat imageSize = ceilf(self.view.bounds.size.width * 0.7f);
+        UIView *qrView = [[UIView alloc] initWithFrame:CGRectMake(0,12,320,620)];
+        qrView.backgroundColor = [UIColor whiteColor];
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(floorf(self.view.bounds.size.width * 0.5f - imageSize * 0.5f), floorf(self.view.bounds.size.height * 0.5f - imageSize * 0.5f) -50 , imageSize, imageSize*1.38f )];
+        
+        UIImage * qrCodeImg = [UIImage mdQRCodeForString:_audioURL size:imageView.bounds.size.width fillColor:[UIColor darkGrayColor]];
+        
+        //imageView.image = [self drawText:[NSString stringWithFormat:@"AudioQR: %@", shortUrl] inImage:qrCodeImg atPoint:CGPointMake(0, 0)];
+        
+        //add extra information to the image:
+        //"Voice message, scan to hear"
+        //add customized message to the image introducing the images
+        //"more about this art piece."
+        //add space-padding to the image.
+        UIImage *bottomImage = [UIImage imageNamed:@"bg1.png"]; //background image
+        UIImage *image       = qrCodeImg; //foreground image
+        
+        CGSize newSize = CGSizeMake( 244, 340 );
+        UIGraphicsBeginImageContext( newSize );
+        
+        // Use existing opacity as is
+        [bottomImage drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+        
+        // Apply supplied opacity if applicable
+        [image drawInRect:CGRectMake(10, 58, imageSize, imageSize )];
+        
+        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+        
+        UIGraphicsEndImageContext();
+        
+        newImage = [self drawText:@"Audio QR:"
+                                    inImage:newImage
+                                    atPoint:CGPointMake(10, 10)];
+        
+        newImage = [self drawText:shortUrl
+                          inImage:newImage
+                          atPoint:CGPointMake(10, 24)];
+        
+        newImage = [self drawText:[NSString stringWithFormat:@"%@", _audioDate]
+                          inImage:newImage
+                          atPoint:CGPointMake(10, 340 - 40)];
+        
+        newImage = [self drawText:@"Extract QR to hear the message."
+                          inImage:newImage
+                          atPoint:CGPointMake(10, 340 - 24)];
+        
+        
+        imageView.image = newImage;
+        
+        //Disable the auto saving to cameral roll since we have the sharing function.
+        //UIImageWriteToSavedPhotosAlbum(qrCodeImg, nil, nil, nil);
+        
+        [qrView addSubview:imageView];
+        
+        [self.view addSubview:qrView];
+        
+        //add dismiss button
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [button addTarget:self
+                   action:@selector(dismissQR:)
+         forControlEvents:UIControlEventTouchUpInside];
+        [button setTitle:@"Close" forState:UIControlStateNormal];
+        button.frame = CGRectMake(245.0, 18.0, 80.0, 40.0);
+        [qrView addSubview:button];
+        
+        //add share button
+        UIButton *buttonShare = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [buttonShare addTarget:self
+                        action:@selector(shareQR:)
+              forControlEvents:UIControlEventTouchUpInside];
+        [buttonShare setTitle:@"Share" forState:UIControlStateNormal];
+        buttonShare.frame = CGRectMake(0.0, 18.0, 80.0, 40.0);
+        [qrView addSubview:buttonShare];
+        
+        //add replay button
+        UIButton *buttonReplay = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [buttonReplay addTarget:self
+                         action:@selector(replay:)
+               forControlEvents:UIControlEventTouchUpInside];
+        [buttonReplay setTitle:@"RePlay" forState:UIControlStateNormal];
+        buttonReplay.frame = CGRectMake(65.0, 18.0, 80.0, 40.0);
+        [qrView addSubview:buttonReplay];
+        
+    } error:^(NSError *error) {
+        // Handle the error.
+        NSLog(@"Error: %@", [error localizedDescription]);
+    }];
+}
 
+
+- (void) dismissQR:(UIButton *)sender {
+    
+    _audioPlayer = nil;
     [[sender superview] removeFromSuperview];
     
 }
@@ -398,14 +450,47 @@
 
 /*-------------
  
- Audio history and management
+ Audio replay
  
  ---------------*/
 
+- (void) stopPlaying:(UIButton *)sender  {
 
-- (void) replay {}
+    _audioPlayer = nil;
+    
+}
 
 
+- (void) replay:(UIButton *)sender {
+    //play the _audioURL
+    [self playAudio:_audioURL];
+    
+    //switch play button
+}
+
+- (void)playAudio:(NSString *)result
+{
+    NSLog(@"play: %@", result);
+    NSError *error1;
+    NSError *error2;
+    NSURL *url = [NSURL URLWithString:result];
+    self.mp3Data = [[NSData alloc] initWithContentsOfURL:url options:0 error:&error1 ];
+    
+    _audioPlayer = nil;
+    self.audioPlayer = [[AVAudioPlayer alloc]
+                        initWithData:self.mp3Data
+                        error:&error2];
+    self.audioPlayer.delegate = self;
+    [self.audioPlayer prepareToPlay];
+    [self.audioPlayer play];
+
+}
+
+/*-------------
+ 
+ Audio history and management
+ 
+ ---------------*/
 
 - (void) saveRecord: (NSString *)url {
     //save date and url to database
@@ -436,7 +521,6 @@
 }
 
 
-
 - (IBAction)showHistory:(UIButton *)btn {
 
     //load database
@@ -454,6 +538,7 @@
     NSMutableArray* tmpArray = [[NSMutableArray alloc] init];
     
     historyList = [[context executeFetchRequest:fetchRequest error:nil] mutableCopy];
+    self.records = historyList;
     
     for (int i = 0; i<[historyList count]; i++){
         [tmpArray addObject: [[historyList objectAtIndex:i] valueForKey:@"date"]];
@@ -588,11 +673,7 @@ Utilities
 }
 
 #pragma mark - UITableViewDelegate
-// when user tap the row, what action you want to perform
-- (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"selected %ld row", (long)indexPath.row);
-}
+
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
@@ -601,6 +682,77 @@ Utilities
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 50;
+}
+
+// when user tap the row, what action you want to perform
+- (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    //show reshare view
+    //[searchResults objectAtIndex:indexPath.row]
+    //find url by data
+    _audioURL = [[self.records objectAtIndex:indexPath.row] valueForKey:@"url"];
+    _audioDate = [[self.records objectAtIndex:indexPath.row] valueForKey:@"date"];
+    [self createShareView];
+    
+}
+
+//swipe and delete action
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    AppDelegate* appDelegate = [AppDelegate sharedAppDelegate];
+    NSManagedObjectContext* context = appDelegate.managedObjectContext;
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        
+        // Delete object from database
+        [context deleteObject:[self.records objectAtIndex:indexPath.row]];
+        
+        NSError *error = nil;
+        if (![context save:&error]) {
+            NSLog(@"Can't Delete! %@ %@", error, [error localizedDescription]);
+            return;
+        }
+        
+        // Remove entry from table view and update varible.
+        [self.records removeObjectAtIndex:indexPath.row];
+        searchResults = self.records;
+        [self->tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        
+        // Remove audio file from AWS server?
+        // or expire it automatically.
+        
+    }
+}
+
+
+
++(UIImage*) drawText:(NSString*) text
+             inImage:(UIImage*)  image
+             atPoint:(CGPoint)   point
+{
+    
+    UIFont *font = [UIFont systemFontOfSize:14];
+    
+    UIGraphicsBeginImageContext(image.size);
+    [image drawInRect:CGRectMake(0,0,image.size.width,image.size.height)];
+    CGRect rect = CGRectMake(point.x, point.y, image.size.width, image.size.height);
+    
+    [[UIColor whiteColor] set];
+    
+    NSDictionary *dictionary = @{
+                                 NSFontAttributeName: font,
+                                 NSForegroundColorAttributeName:[UIColor lightGrayColor]
+                                };
+    
+    [text drawInRect:CGRectIntegral(rect) withAttributes:dictionary];
+    
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return newImage;
 }
 
 @end
