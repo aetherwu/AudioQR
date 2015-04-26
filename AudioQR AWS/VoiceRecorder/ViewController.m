@@ -48,7 +48,7 @@
     
     AWSCognitoCredentialsProvider *credentialsProvider = [AWSCognitoCredentialsProvider
                                                           credentialsWithRegionType:AWSRegionUSEast1
-                                                          identityPoolId:@"us-east-1:9781c935-02bb-444d-b2ad-59d724d1ff08"];
+                                                          identityPoolId:@""];
     
     AWSServiceConfiguration *configuration = [AWSServiceConfiguration configurationWithRegion:AWSRegionUSEast1
                                                                           credentialsProvider:credentialsProvider];
@@ -251,7 +251,7 @@
 
         
         //uplpad this mp3 and get url
-        uploadRequest.bucket = @"mindlit";
+        uploadRequest.bucket = @"YOURBUCKET";
         uploadRequest.key = uniqueFileName;
         uploadRequest.body = url;
         NSLog(@"File uploading...");
@@ -290,7 +290,7 @@
                             else
                                NSLog(@"Could not delete file -:%@ ",[error localizedDescription]);
                            
-                           NSString *S3file = [NSString stringWithFormat:@"http://s3.amazonaws.com/mindlit/%@", uniqueFileName];
+                           NSString *S3file = [NSString stringWithFormat:@"http://s3.amazonaws.com/YOURBUCKET/%@", uniqueFileName];
                            
                            //save the history record
                            [self saveRecord:S3file];
